@@ -11,13 +11,6 @@
     - php-mysqlnd
     - mysql
 
-- name: Install web role specific dependencies
-  become: yes
-  become_user: root
-  yum: name={{ item }} state=installed
-  with_items:
-    - git
-
 - name: Start & Enable Apache Server to start on boot
   become: yes
   become_user: root

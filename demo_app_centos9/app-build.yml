@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/application-data.yml"
+  tasks:
+    - name: "DB instance"
+      include_tasks: "01-db-instance.yml"
+
+    - name: "Web instance"
+      include_tasks: "02-web-instance.yml"
+
+- name: deploy MySQL and configure databases
+  remote_user: centos
+  hosts: dbservers
+  # gather_facts: true
+  roles:
+    - db
+
+- name: deploy apache and configure webserver
+  remote_user: centos
+  hosts: webservers
+  # gather_facts: true
+  roles:
+    - web

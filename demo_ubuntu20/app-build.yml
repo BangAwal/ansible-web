@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/application-data.yml"
+  tasks:
+    - name: "Environment Preparation"
+      include_tasks: "01-environment-prep.yml"
+
+    - name: "Instance Creation"
+      include_tasks: "02-instance-creation.yml"
+
+- hosts: ubuntuservers
+  remote_user: ubuntu
+  vars_files:
+    - "vars/application-data.yml"
+  tasks:
+    - name: "DB and Web Configuration"
+      include_tasks: "03-web-configuration.yml"

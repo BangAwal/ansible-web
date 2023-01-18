@@ -1,0 +1,34 @@
+---
+# Keypair environment
+keypair: demo-keypair
+
+# Network environment
+external_net: provider-datacentre
+internal_net: demo-network
+internal_subnet: demo-subnet
+cidr: 192.168.2.0/24
+pool_start: 192.168.2.170
+pool_end: 192.168.2.200
+router: demo-router
+
+# Security group environment
+sec_group_name: demo-sec-group
+
+# Image for production
+image: rhel8
+
+# flaovr for production
+flavor_name: demo-flavor
+flavor_ram: 2048
+flavor_disk: 10
+flavor_vcpus: 2
+
+# Application port to be used
+app_port: 80
+
+# Instance data
+db_info:
+  - name: production-db1
+
+web_info:
+  - name: production-web1

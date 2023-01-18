@@ -1,0 +1,13 @@
+---
+# Keypair environment
+keypair: demo-keypair
+
+# Network environment
+network_name: demo-network
+subnet_name: demo-subnet
+cidr: 192.168.2.0/24
+pool_start: 192.168.2.170
+pool_end: 192.168.2.200
+
+# Security group environment
+sec_group_name: demo-sec-group

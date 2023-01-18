@@ -1,0 +1,33 @@
+---
+# Keypair environment
+keypair: demo-keypair
+
+# Network environment
+external_net: public
+internal_net: demo-network
+internal_subnet: demo-subnet
+cidr: 192.168.2.0/24
+pool_start: 192.168.2.170
+pool_end: 192.168.2.200
+router: demo-router
+instance_name: ubuntu-web
+# Security group environment
+sec_group_name: demo-sec-group
+
+# Image for production
+image: ubuntu20
+
+# flaovr for production
+flavor_name: demo-flavor
+flavor_ram: 2048
+flavor_disk: 10
+flavor_vcpus: 2
+
+# DB Vars
+dbuser: admin
+dbname: mydb
+upassword: redhat
+dbtable: employee
+
+# Application port to be used
+app_port: 80

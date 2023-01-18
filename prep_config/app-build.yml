@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/config-data.yml"
+  tasks:
+    - name: "Create Key Pair"
+      include_tasks: "01-keypair.yml"
+    - name: "Create Network"
+      include_tasks: "02-network.yml"
+    - name: "Create Security Group"
+      include_tasks: "03-security-group.yml"

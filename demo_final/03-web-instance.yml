@@ -1,0 +1,32 @@
+---
+- name: "Manage instances with os_server module"
+  os_server:
+    name: "{{ item.name }}"
+    state: present
+    auth: "{{ credentials }}"
+    flavor: "{{ flavor_name }}"
+    image: "{{ image }}"
+    key_name: "{{ keypair }}"
+    network: "{{ internal_net }}"
+    security_groups: "{{ sec_group_name }}"
+    config_drive: yes
+    auto_ip: yes
+  with_items:
+    - "{{ web_info }}"
+
+- name: "Query instances with os_server_info"
+  os_server_info:
+    auth: "{{ credentials }}"
+    server: "*production*"
+  register: result
+
+- name: "Ensure hosts file is updated"
+  lineinfile:
+    path: hosts
+    regex: "^{{ item.name }}$"
+    insertafter: "[webservers]"
+    line: "{{ item.name }} ansible_host={{ item.interface_ip }}"
+  with_items:
+    - "{{ result.openstack_servers }}"
+- name: "Force Ansible to refresh inventory"
+  meta: refresh_inventory

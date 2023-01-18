@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/admin.yml"
+    - "vars/application-data.yml"
+  tasks:
+    - name: "Environment Preparation"
+      include_tasks: "01-environment-prep.yml"
+
+    - name: "DB instance"
+      include_tasks: "02-db-instance.yml"
+
+    - name: "Web instance"
+      include_tasks: "03-web-instance.yml"
+
+- name: deploy MySQL and configure databases
+  hosts: dbservers
+  roles:
+    - db
+
+- name: deploy apache and configure webserver
+  hosts: webservers
+  roles:
+    - web

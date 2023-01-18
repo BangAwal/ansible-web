@@ -1,0 +1,7 @@
+---
+- name: Create OpenStack SSH KeyPair
+  os_keypair:
+    auth: "{{ credentials }}"
+    name: "{{ keypair }}"
+    state: present
+  register: key

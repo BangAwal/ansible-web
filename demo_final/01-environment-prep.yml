@@ -1,0 +1,97 @@
+---
+- name: Generate SSH keypair
+  openssh_keypair:
+    path: "~/.ssh/{{ keypair }}"
+    type: "rsa"
+    state: present
+    force: no
+
+- name: Create OpenStack keypair
+  os_keypair:
+    state: present
+    auth: "{{ credentials }}"
+    name: "{{ keypair }}"
+    public_key: "{{ lookup('file', '~/.ssh/{{ keypair }}.pub') }}"
+
+- name: Create a new private network
+  os_network:
+    state: present
+    auth: "{{ credentials }}"
+    name: "{{ internal_net }}"
+    external: false
+    shared: false
+
+- name: Create subnet
+  os_subnet:
+    state: present
+    auth: "{{ credentials }}"
+    network_name: "{{ internal_net }}"
+    cidr: "{{ cidr }}"
+    allocation_pool_start: "{{ pool_start }}"
+    allocation_pool_end: "{{ pool_end }}"
+    ip_version: 4
+    name: "{{ internal_subnet }}"
+  register: subnet
+
+- name: Create a security group
+  os_security_group:
+    state: present
+    auth: "{{ credentials }}"
+    name: "{{ sec_group_name }}"
+
+- name: Add SSH rules to security group
+  os_security_group_rule:
+    auth: "{{ credentials }}"
+    security_group: "{{ sec_group_name }}"
+    protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    remote_ip_prefix: 0.0.0.0/0
+    state: present
+
+- name: Add HTTP rules to security group
+  os_security_group_rule:
+    auth: "{{ credentials }}"
+    security_group: "{{ sec_group_name }}"
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+    state: present
+
+- name: Add HTTPS rules to security group
+  os_security_group_rule:
+    auth: "{{ credentials }}"
+    security_group: "{{ sec_group_name }}"
+    protocol: tcp
+    port_range_min: 433
+    port_range_max: 433
+    remote_ip_prefix: 0.0.0.0/0
+    state: present
+
+- name: Add MySQL rules to security group
+  os_security_group_rule:
+    auth: "{{ credentials }}"
+    security_group: "{{ sec_group_name }}"
+    protocol: tcp
+    port_range_min: 3306
+    port_range_max: 3306
+    remote_ip_prefix: 0.0.0.0/0
+    state: present
+
+- name: Create OpenStack flavor
+  os_nova_flavor:
+    auth: "{{ admin }}"
+    name: "{{ flavor_name }}"
+    ram: "{{ flavor_ram }}"
+    disk: "{{ flavor_disk }}"
+    vcpus: "{{ flavor_vcpus }}"
+    state: present
+
+- name: Create a new router
+  os_router:
+    state: present
+    auth: "{{ credentials }}"
+    name: "{{ router }}"
+    network: "{{ external_net }}"
+    interfaces: "{{ internal_subnet }}"

@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/application-data.yml"
+  tasks:
+    - name: "Environment Preparation"
+      include_tasks: "01-environment-prep.yml"
+
+    - name: "DB instance"
+      include_tasks: "02-db-instance.yml"
+
+    - name: "Web instance"
+      include_tasks: "03-web-instance.yml"
+
+    - name: "Force Ansible to refresh inventory"
+      meta: refresh_inventory
+
+- hosts: dbservers
+  remote_user: cloud-user
+  vars_files:
+    - "vars/application-data.yml"
+  tasks:
+    - name: "Register Subscription"
+      include_tasks: "04-register-subscription.yml"
+
+- hosts: webservers
+  remote_user: cloud-user
+  vars_files:
+    - "vars/application-data.yml"
+  tasks:
+    - name: "Register Subscription"
+      include_tasks: "04-register-subscription.yml"
+
+- name: deploy MySQL and configure databases
+  hosts: dbservers
+  remote_user: cloud-user
+  roles:
+    - db
+
+- name: deploy apache and configure webserver
+  hosts: webservers
+  remote_user: cloud-user
+  roles:
+    - web

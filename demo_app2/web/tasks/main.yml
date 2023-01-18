@@ -1,0 +1,52 @@
+---
+# Playbook for Web Server
+
+- name: Install httpd and php
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=present
+  with_items:
+    - httpd
+    - php
+    - php-mysqlnd
+    - mysql
+
+- name: Install web role specific dependencies
+  become: yes
+  become_user: root
+  yum: name={{ item }} state=installed
+  with_items:
+    - git
+
+- name: Start & Enable Apache Server to start on boot
+  become: yes
+  become_user: root
+  service: name=httpd state=started enabled=yes
+
+- name: Delete index.html if exists
+  become: yes
+  become_user: root
+  file: path=/var/www/html/index.html state=absent
+
+- name: Creates the index.php file
+  become: yes
+  become_user: root
+  template: src=index.php.j2 dest=/var/www/html/index.php
+
+- name: turn the SELinux httpd_can_network_connnect_db boolean on
+  become: yes
+  become_user: root
+  seboolean:
+    name: httpd_can_network_connect_db
+    state: on
+    persistent: yes
+
+- name: restart httpd
+  become: yes
+  become_user: root
+  service: name=httpd state=restarted
+# - name: Enable the firewall port for Apache
+#   become: yes
+#   become_user: root
+#   firewalld: port=80/tcp permanent=true state=enabled immediate=yes
+

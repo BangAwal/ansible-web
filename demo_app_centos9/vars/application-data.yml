@@ -1,0 +1,15 @@
+---
+# Network for our production environment
+external_net: provider-datacentre
+internal_net: finance-network1
+internal_subnet: finance-subnet1
+
+# Application port to be used
+app_port: 80
+
+# Instance data
+db_info:
+  - name: production-db1
+
+web_info:
+  - name: production-web1

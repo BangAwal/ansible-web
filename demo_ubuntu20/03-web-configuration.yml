@@ -1,0 +1,45 @@
+---
+- vars:
+    web_root: "/var/www/html"
+  tasks:
+    - name: Update apt cache
+      apt: update_cache=yes
+    - name: Install Apache
+      apt: name=apache2 state=present
+    - name: Start Apache
+      service: name=apache2 state=started
+    - name: Install PHP
+      apt: name=php state=present
+    - name: Install MySQL server
+      apt: name=mysql-server state=present
+    - name: Start MySQL service
+      service: name=mysql state=started
+    - name: Secure MySQL installation
+      mysql_secure_installation:
+        remove_anonymous_users: yes
+        remove_test_database: yes
+        root_password: "{{ upassword }}"
+        reload_privilege_tables: yes
+
+    - name: Create database
+      mysql_db:
+        name: "{{ dbname }}"
+        state: present
+    - name: Create database user
+      mysql_user:
+        name: "{{ dbuser }}"
+        password: "{{ upassword }}"
+        priv: "{{ dbname }}.*:ALL"
+        state: present
+    - name: Create index.php file
+      copy:
+        dest: "{{ web_root }}/index.php"
+        content: |
+          <?php
+          echo 'Hello, World!';
+    - name: Set permissions on index.php
+      file:
+        path: "{{ web_root }}/index.php"
+        owner: www-data
+        group: www-data
+        mode: 0644

@@ -1,0 +1,15 @@
+- name: Subscription Manager Register
+  become: yes
+  become_user: root
+  command: subscription-manager register --force --username="{{ account_name }}" --password="{{ account_pass }}"
+  # when: subscription_manager_status.rc == 1
+
+- name: Subscription Manager Attach
+  become: yes
+  become_user: root
+  command: subscription-manager attach --auto
+
+- name: Update Repolist
+  become: yes
+  become_user: root
+  command: yum repolist

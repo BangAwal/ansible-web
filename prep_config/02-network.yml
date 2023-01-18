@@ -1,0 +1,20 @@
+---
+- name: Create a new private network
+  os_network:
+    state: present
+    auth: "{{ credentials }}"
+    name: "{{ network_name }}"
+    external: false
+    shared: false
+
+- name: Create subnet
+  os_subnet:
+    state: present
+    auth: "{{ credentials }}"
+    network_name: "{{ network_name }}"
+    cidr: "{{ cidr }}"
+    allocation_pool_start: "{{ pool_start }}"
+    allocation_pool_end: "{{ pool_end }}"
+    ip_version: 4
+    name: "{{ subnet_name }}"
+  register: subnet

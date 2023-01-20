@@ -26,3 +26,4 @@
     line: "{{ item.name }} ansible_host={{ item.interface_ip }}"
   with_items:
     - "{{ result.openstack_servers }}"
+  no_log: true

@@ -1,5 +1,5 @@
 [dbservers]
-production-db1
+ansible-db1
 
 [webservers]
-production-web1
+ansible-web1

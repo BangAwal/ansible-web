@@ -26,5 +26,7 @@
     line: "{{ item.name }} ansible_host={{ item.interface_ip }}"
   with_items:
     - "{{ result.openstack_servers }}"
+  no_log: true
+
 - name: "Force Ansible to refresh inventory"
   meta: refresh_inventory

@@ -1,7 +1,7 @@
 ---
 - name: "Manage instances with os_server module"
   os_server:
-    name: "{{ item.name }}"
+    name: "{{ db_instance }}"
     state: present
     auth: "{{ credentials }}"
     flavor: "{{ flavor_name }}"
@@ -11,13 +11,11 @@
     security_groups: "{{ sec_group_name }}"
     config_drive: yes
     auto_ip: yes
-  with_items:
-    - "{{ db_info }}"
 
 - name: "Query instances with os_server_info"
   os_server_info:
     auth: "{{ credentials }}"
-    server: "*production*"
+    server: "{{ db_instance }}"
   register: result
 
 - name: "Ensure hosts file is updated"

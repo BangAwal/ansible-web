@@ -27,8 +27,5 @@ flavor_vcpus: 2
 app_port: 80
 
 # Instance data
-db_info:
-  - name: production-db1
-
-web_info:
-  - name: production-web1
+db_instance: ansible-db1
+web_instance: ansible-web1
